@@ -1,3 +1,3 @@
-## Computor version 1
+# Computor version 1
 
-# build with rust
+## build with rust
