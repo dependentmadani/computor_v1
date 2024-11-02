@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ensure the Rust binary exists
-if [[ ! -f "./computor" ]]; then
+if [[ ! -f "./build/computor_v1" ]]; then
     echo "Error: my_rust_program not found. Please compile your Rust code first."
     exit 1
 fi
