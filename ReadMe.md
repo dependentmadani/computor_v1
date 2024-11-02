@@ -13,8 +13,8 @@ Welcome to **Computor v1**, where I get to show off my mad polynomial-solving sk
 ### Example:
 
 ```bash
-$ ./computor "5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0"
-Reduced form: 4 * X^0 + 4 * X^1 - 9.3 * X^2 = 0
+$ ./build/computor_v1 "5 + 4 * X - 9.3 * X^2 = 1"
+Reduced form: 4 + 4 * X - 9.3 * X^2 = 0
 Polynomial degree: 2
 Discriminant is strictly positive, the two solutions are:
 0.905239 and -0.475131
