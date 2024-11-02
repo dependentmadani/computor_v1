@@ -2,6 +2,21 @@ use std::collections::HashMap;
 use std::io;
 use utils::utils;
 
+fn check_allowed_characters_equation(equation: &String) -> bool {
+    let numbers = "0123456789";
+    let allowed = "X^+-.*= ";
+    let mut legit = true;
+
+    for c in equation.chars() {
+        if !numbers.contains(c) && !allowed.contains(c) {
+            legit = false;
+            break;
+        }
+    }
+
+    legit
+}
+
 fn split_with_signs(input: &String) -> Result<Vec<String>, io::Error> {
     let numbers = "0123456789";
     let mut result = Vec::new();
@@ -157,7 +172,11 @@ fn fill_map(info: &mut HashMap<String, f32>, part: &String, side: &str) -> Resul
             *info.get_mut(right_split_part).unwrap() -= number;
         }
     } else {
-        info.insert(right_split_part.to_string(), number);
+        if side == "left" {
+            info.insert(right_split_part.to_string(), number);
+        } else {
+            info.insert(right_split_part.to_string(), (-1.0) * number);
+        }
     }
     Ok(())
 }
@@ -165,10 +184,17 @@ fn fill_map(info: &mut HashMap<String, f32>, part: &String, side: &str) -> Resul
 pub fn parsing(input: &String) -> Result<HashMap<String, f32>, io::Error> {
     let mut info = HashMap::new();
 
+    if !check_allowed_characters_equation(input) {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            "The provided equation contains unknown characters!",
+        ))
+    }
+
     if !utils::valid_equation_equal_operator(input) {
         return Err(io::Error::new(
             io::ErrorKind::InvalidInput,
-            "The input should be a valid equation with 1 equal operator!"
+            "The input should be a valid equation with 1 equal operator!",
         ))
     }
 
@@ -190,14 +216,12 @@ pub fn parsing(input: &String) -> Result<HashMap<String, f32>, io::Error> {
         Ok(result) => result,
         Err(e) => return Err(e),
     };
-
+    
     for part in left_split {
-        if !utils::check_equation_format(&part.to_string()) {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidInput,
-                "Equation format is incorrect!",
-            ));
-        }
+        match utils::check_equation_format(&part.to_string())  {
+            Ok(_) => (),
+            Err(e) => return Err(e),
+        };
         match fill_map(&mut info, &part.to_string(), "left") {
             Ok(_) => (),
             Err(e) => return Err(e),
@@ -205,12 +229,10 @@ pub fn parsing(input: &String) -> Result<HashMap<String, f32>, io::Error> {
     }
 
     for part in right_split {
-        if !utils::check_equation_format(&part.to_string()) {
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidInput,
-                "Equation format is incorrect!",
-            ));
-        }
+        match utils::check_equation_format(&part.to_string())  {
+            Ok(_) => (),
+            Err(e) => return Err(e),
+        };
         match fill_map(&mut info, &part.to_string(), "right") {
             Ok(_) => (),
             Err(e) => return Err(e),

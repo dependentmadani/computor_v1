@@ -12,10 +12,10 @@ fn main() {
 
     args.remove(0);
     if args.len() == 0 {
-        println!("Please provide an equation!");
+        println!("{}Please provide an equation!{}", red, reset);
         return;
     } else if args.len() > 1 {
-        println!("Please provide the equation inside double quotes, it should be in one argument!");
+        println!("{}Please provide the equation inside double quotes, it should be in one argument!{}", red, reset);
         return;
     }
 
@@ -29,6 +29,8 @@ fn main() {
         }
     };
 
+    utils::utils::print_reduced_form(&result);
+    
     let degree = match utils::utils::print_polynomial_degree(&mut result) {
         Ok(degree) => degree,
         Err(e) => {
@@ -36,8 +38,6 @@ fn main() {
             return;
         }
     };
-
-    utils::utils::print_reduced_form(&result);
     if degree >= 0 && degree <= 2 {
         println!("{}Polynomial degree:{} {}", green, reset, degree);
     } else {
